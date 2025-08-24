@@ -20,12 +20,12 @@ export const LoadingMessage: React.FC = () => {
             </div>
             <div className="flex items-center gap-2">
               <Cog className="text-slate-600 animate-spin" size={16} />
-              <span className="text-sm text-slate-700 font-semibold">VIPUL is analyzing your query...</span>
+              <span className="text-sm text-slate-700 font-semibold">CemtrAS AI is analyzing your query...</span>
             </div>
           </div>
         </div>
         <div className="text-xs text-slate-500 mt-2 font-semibold">
-          TECHNICAL ASSISTANT • Processing...
+          CemtrAS AI • Processing...
         </div>
       </div>
     </div>

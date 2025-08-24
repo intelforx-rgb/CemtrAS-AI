@@ -50,16 +50,13 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onComplete }) => {
             <div className="p-3 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl shadow-lg">
               <Factory className="text-white" size={32} />
             </div>
-            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-yellow-500">
-              <img 
-                src="/untitled (10).jpeg" 
-                alt="Vipul"
-                className="w-full h-full object-cover"
-              />
+            <div>
+              <h1 className="text-2xl font-bold text-white">CemtrAS AI</h1>
+              <p className="text-yellow-400 text-sm font-semibold">AI-Driven Engineering</p>
             </div>
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">Cement Plant Expert AI</h1>
-          <p className="text-slate-300">Secure access to your technical assistant</p>
+          <h1 className="text-3xl font-bold text-white mb-2">CemtrAS AI</h1>
+          <p className="text-slate-300">AI-Driven Engineering for Cement Excellence</p>
         </div>
 
         {/* Auth Form Card */}

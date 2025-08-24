@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import type { UserRole } from '../types';
+import type { AllRoles } from '../types';
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyD-VuzjoltDtX8Kw_inxDOpZ_xohYi7MFk';
 
@@ -9,8 +9,16 @@ if (!API_KEY) {
 
 const genAI = new GoogleGenerativeAI(API_KEY);
 
-const getSystemInstruction = (role: UserRole): string => {
-  const baseInstruction = `You are Vipul Sharma, a Cement Plant Expert AI Assistant and Technical Consultant.
+const getSystemInstruction = (role: AllRoles): string => {
+  if (role === 'General AI Assistant') {
+    return `You are CemtrAS AI, an advanced AI assistant created to help with a wide range of topics and questions.
+
+Provide professional, clear, and structured responses. Be helpful, accurate, and comprehensive in your answers.
+Format your responses with proper structure using headings, bullet points, and clear sections when appropriate.
+Always maintain a professional and friendly tone.`;
+  }
+
+  const baseInstruction = `You are CemtrAS AI, a Cement Plant Expert AI Assistant and Technical Consultant.
 
 CRITICAL: Always respond in this structured consultant format:
 
@@ -93,7 +101,7 @@ Focus on:
   return baseInstruction + roleSpecificInstructions[role];
 };
 
-export const generateResponse = async (prompt: string, role: UserRole): Promise<string> => {
+export const generateResponse = async (prompt: string, role: AllRoles): Promise<string> => {
   try {
     const model = genAI.getGenerativeModel({ 
       model: 'gemini-1.5-flash',

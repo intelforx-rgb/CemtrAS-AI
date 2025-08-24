@@ -25,15 +25,150 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onGuestAccess
               <Factory className="text-white" size={32} />
             </div>
             <div>
-              <h1 className="text-white font-bold text-lg">CEMENT PLANT</h1>
-              <p className="text-yellow-400 text-sm font-semibold">EXPERT AI</p>
+              <h1 className="text-white font-bold text-lg">CemtrAS AI</h1>
+              <p className="text-yellow-400 text-sm font-semibold">AI-Driven Engineering</p>
             </div>
           </div>
         </div>
 
-        {/* Profile Photo Card */}
-        <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20 mb-8">
-          <div className="w-48 h-48 rounded-full overflow-hidden border-6 border-yellow-500 shadow-2xl mx-auto mb-6">
+        {/* Brand Identity */}
+        <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20 mb-8 text-center">
+          <div className="p-6 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl w-32 h-32 mx-auto mb-6 flex items-center justify-center shadow-2xl">
+            <Factory className="text-white" size={48} />
+          </div>
+          <div>
+            <h2 className="text-white font-bold text-3xl mb-2">CemtrAS AI</h2>
+            <p className="text-yellow-400 font-semibold text-lg mb-4">AI-Driven Engineering for Cement Excellence</p>
+          </div>
+        </div>
+
+        {/* Founder Section */}
+        <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-white/10 mb-6">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-full overflow-hidden border-3 border-yellow-500 shadow-lg">
+              <img 
+                src="/untitled (10).jpeg" 
+                alt="Vipul Sharma"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div>
+              <p className="text-slate-300 text-xs font-semibold uppercase tracking-wide mb-1">Founder</p>
+              <h3 className="text-white font-bold text-lg">Vipul Sharma</h3>
+              <p className="text-yellow-400 text-sm font-semibold">Technical Expert</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Welcome Message */}
+        <div className="text-center max-w-lg">
+          <h3 className="text-white font-bold text-3xl mb-4 leading-tight">
+            Welcome to CemtrAS AI
+          </h3>
+          <p className="text-slate-300 text-lg mb-2 font-semibold">
+            AI-Driven Engineering for Cement Excellence
+          </p>
+          <p className="text-slate-400 text-base leading-relaxed">
+            Your intelligent partner for cement plant operations, maintenance, and performance optimization powered by advanced AI technology.
+          </p>
+        </div>
+      </div>
+
+      {/* Right Side - 50% */}
+      <div className="w-1/2 flex flex-col justify-center items-center p-12 bg-gradient-to-br from-gray-100 to-gray-200">
+        <div className="max-w-md w-full space-y-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-slate-800 mb-4">Choose Access Method</h2>
+            <p className="text-slate-600 text-lg">Select how you'd like to proceed</p>
+          </div>
+
+          {/* Login/Register Button */}
+          <div className="bg-white rounded-2xl p-8 shadow-2xl border-4 border-blue-200 hover:border-blue-400 transition-all duration-300 hover:shadow-3xl">
+            <div className="text-center">
+              <div className="p-4 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl w-16 h-16 mx-auto mb-6 flex items-center justify-center shadow-lg">
+                <LogIn className="text-white w-8 h-8" />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-800 mb-4">🔑 Login / Register</h3>
+              <p className="text-slate-600 mb-6 leading-relaxed">
+                Access advanced features and personalized experience
+              </p>
+              <div className="space-y-3 mb-8 text-left">
+                <div className="flex items-center gap-3">
+                  <Shield className="text-blue-600 w-5 h-5" />
+                  <span className="text-slate-700 font-semibold">Save chat history & detailed reports</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Clock className="text-green-600 w-5 h-5" />
+                  <span className="text-slate-700 font-semibold">General AI Assistant + Specialists</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <FileText className="text-purple-600 w-5 h-5" />
+                  <span className="text-slate-700 font-semibold">Personalized recommendations</span>
+                </div>
+              </div>
+              <button
+                onClick={onLogin}
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white font-bold py-4 px-6 rounded-xl
+                         hover:from-blue-700 hover:to-blue-900 transition-all duration-300 shadow-lg hover:shadow-xl
+                         flex items-center justify-center gap-3 text-lg"
+              >
+                <LogIn size={20} />
+                Login / Register
+                <ArrowRight size={20} />
+              </button>
+            </div>
+          </div>
+
+          {/* Guest Access Button */}
+          <div className="bg-white rounded-2xl p-8 shadow-2xl border-4 border-yellow-200 hover:border-yellow-400 transition-all duration-300 hover:shadow-3xl">
+            <div className="text-center">
+              <div className="p-4 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl w-16 h-16 mx-auto mb-6 flex items-center justify-center shadow-lg">
+                <Zap className="text-white w-8 h-8" />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-800 mb-4">⚡ Quick Guest Access</h3>
+              <p className="text-slate-600 mb-6 leading-relaxed">
+                Continue without login for cement industry specialists
+              </p>
+              <div className="space-y-3 mb-8 text-left">
+                <div className="flex items-center gap-3">
+                  <ArrowRight className="text-yellow-600 w-5 h-5" />
+                  <span className="text-slate-700 font-semibold">Instant access to cement specialists</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <ArrowRight className="text-yellow-600 w-5 h-5" />
+                  <span className="text-slate-700 font-semibold">No registration required</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <ArrowRight className="text-yellow-600 w-5 h-5" />
+                  <span className="text-slate-700 font-semibold">Perfect for quick consultations</span>
+                </div>
+              </div>
+              <button
+                onClick={onGuestAccess}
+                className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-white font-bold py-4 px-6 rounded-xl
+                         hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300 shadow-lg hover:shadow-xl
+                         flex items-center justify-center gap-3 text-lg"
+              >
+                <Zap size={20} />
+                Continue as Guest
+                <ArrowRight size={20} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="text-center mt-12">
+          <p className="text-slate-500 text-sm">
+            Powered by <span className="text-blue-600 font-bold">CemtrAS AI Technology</span> | 
+            © 2024 CemtrAS AI
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
             <img 
               src="/untitled (10).jpeg" 
               alt="Vipul Sharma"

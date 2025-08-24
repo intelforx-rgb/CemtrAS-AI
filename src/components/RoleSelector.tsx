@@ -1,13 +1,14 @@
 import React from 'react';
 import { Factory, BarChart3, TrendingUp, ShoppingCart, Wrench, Settings } from 'lucide-react';
-import type { UserRole } from '../types';
+import type { AllRoles, UserRole, GeneralRole } from '../types';
 
 interface RoleSelectorProps {
-  selectedRole: UserRole;
-  onRoleChange: (role: UserRole) => void;
+  selectedRole: AllRoles;
+  onRoleChange: (role: AllRoles) => void;
+  isLoggedIn: boolean;
 }
 
-const roles: { value: UserRole; label: string; icon: React.ReactNode; color: string; description: string }[] = [
+const specialistRoles: { value: UserRole; label: string; icon: React.ReactNode; color: string; description: string }[] = [
   { 
     value: 'Operations', 
     label: 'Operations & Maintenance', 
@@ -52,10 +53,84 @@ const roles: { value: UserRole; label: string; icon: React.ReactNode; color: str
   },
 ];
 
-export const RoleSelector: React.FC<RoleSelectorProps> = ({ selectedRole, onRoleChange }) => {
+const generalRole: { value: GeneralRole; label: string; icon: React.ReactNode; color: string; description: string } = {
+  value: 'General AI Assistant',
+  label: 'General AI Assistant',
+  icon: <MessageSquare size={18} />,
+  color: 'border-indigo-500 bg-indigo-50 text-indigo-700',
+  description: 'ChatGPT-like conversational AI assistant'
+};
+
+export const RoleSelector: React.FC<RoleSelectorProps> = ({ selectedRole, onRoleChange, isLoggedIn }) => {
+  const allRoles = isLoggedIn ? [...specialistRoles, generalRole] : specialistRoles;
+
   return (
-    <div className="space-y-3">
-      {roles.map((role) => (
+    <div className="space-y-3 max-h-96 overflow-y-auto">
+      <div className="text-slate-300 font-semibold text-xs uppercase tracking-wide mb-3">
+        Cement Industry Specialists:
+      </div>
+      {specialistRoles.map((role) => (
+        <button
+          key={role.value}
+          onClick={() => onRoleChange(role.value)}
+          className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 border-2 ${
+            selectedRole === role.value
+              ? `${role.color} shadow-lg transform scale-105`
+              : 'border-slate-600 bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 hover:border-slate-500'
+          }`}
+        >
+          <div className={`p-2 rounded-lg ${selectedRole === role.value ? 'bg-white/20' : 'bg-slate-700'}`}>
+            {role.icon}
+          </div>
+          <div className="text-left flex-1">
+            <div className={`font-bold text-sm ${selectedRole === role.value ? '' : 'text-white'}`}>
+              {role.label}
+            </div>
+            <div className={`text-xs ${selectedRole === role.value ? 'opacity-80' : 'text-slate-400'}`}>
+              {role.description}
+            </div>
+          </div>
+          {selectedRole === role.value && (
+            <div className="w-3 h-3 bg-white rounded-full shadow-lg"></div>
+          )}
+        </button>
+      ))}
+      
+      {isLoggedIn && (
+        <>
+          <div className="text-slate-300 font-semibold text-xs uppercase tracking-wide mb-3 mt-6">
+            General Assistant:
+          </div>
+          <button
+            key={generalRole.value}
+            onClick={() => onRoleChange(generalRole.value)}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 border-2 ${
+              selectedRole === generalRole.value
+                ? `${generalRole.color} shadow-lg transform scale-105`
+                : 'border-slate-600 bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 hover:border-slate-500'
+            }`}
+          >
+            <div className={`p-2 rounded-lg ${selectedRole === generalRole.value ? 'bg-white/20' : 'bg-slate-700'}`}>
+              {generalRole.icon}
+            </div>
+            <div className="text-left flex-1">
+              <div className={`font-bold text-sm ${selectedRole === generalRole.value ? '' : 'text-white'}`}>
+                {generalRole.label}
+              </div>
+              <div className={`text-xs ${selectedRole === generalRole.value ? 'opacity-80' : 'text-slate-400'}`}>
+                {generalRole.description}
+              </div>
+            </div>
+            {selectedRole === generalRole.value && (
+              <div className="w-3 h-3 bg-white rounded-full shadow-lg"></div>
+            )}
+          </button>
+        </>
+      )}
+    </div>
+  );
+};
+
         <button
           key={role.value}
           onClick={() => onRoleChange(role.value)}
