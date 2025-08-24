@@ -1,14 +1,13 @@
 import React from 'react';
-import { Factory, BarChart3, TrendingUp, ShoppingCart, Wrench, Settings, MessageSquare } from 'lucide-react';
-import type { UserRole, GeneralRole, AllRoles } from '../types';
+import { Factory, BarChart3, TrendingUp, ShoppingCart, Wrench, Settings } from 'lucide-react';
+import type { UserRole } from '../types';
 
 interface RoleSelectorProps {
-  selectedRole: AllRoles;
-  onRoleChange: (role: AllRoles) => void;
-  isLoggedIn: boolean;
+  selectedRole: UserRole;
+  onRoleChange: (role: UserRole) => void;
 }
 
-const specialistRoles: { value: UserRole; label: string; icon: React.ReactNode; color: string; description: string }[] = [
+const roles: { value: UserRole; label: string; icon: React.ReactNode; color: string; description: string }[] = [
   { 
     value: 'Operations', 
     label: 'Operations & Maintenance', 
@@ -53,87 +52,35 @@ const specialistRoles: { value: UserRole; label: string; icon: React.ReactNode; 
   },
 ];
 
-const generalRole: { value: GeneralRole; label: string; icon: React.ReactNode; color: string; description: string } = {
-  value: 'General AI Assistant',
-  label: 'General AI Assistant',
-  icon: <MessageSquare size={18} />,
-  color: 'border-indigo-500 bg-indigo-50 text-indigo-700',
-  description: 'ChatGPT-like general assistance & conversations'
-};
-
-export const RoleSelector: React.FC<RoleSelectorProps> = ({ selectedRole, onRoleChange, isLoggedIn }) => {
-  const allRoles = isLoggedIn ? [...specialistRoles, generalRole] : specialistRoles;
-
+export const RoleSelector: React.FC<RoleSelectorProps> = ({ selectedRole, onRoleChange }) => {
   return (
     <div className="space-y-3">
-      <div className="text-xs text-slate-400 uppercase tracking-wide font-bold mb-4">
-        {isLoggedIn ? 'ALL AVAILABLE MODES:' : 'CEMENT SPECIALIST MODES:'}
-      </div>
-      
-      {/* Specialist Roles */}
-      <div className="space-y-2">
-        <div className="text-xs text-slate-500 uppercase tracking-wide font-semibold mb-2">
-          🏭 Cement Industry Specialist
-        </div>
-        {specialistRoles.map((role) => (
-          <button
-            key={role.value}
-            onClick={() => onRoleChange(role.value)}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 border-2 ${
-              selectedRole === role.value
-                ? `${role.color} shadow-lg transform scale-105`
-                : 'border-slate-600 bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 hover:border-slate-500'
-            }`}
-          >
-            <div className={`p-2 rounded-lg ${selectedRole === role.value ? 'bg-white/20' : 'bg-slate-700'}`}>
-              {role.icon}
-            </div>
-            <div className="text-left flex-1">
-              <div className={`font-bold text-sm ${selectedRole === role.value ? '' : 'text-white'}`}>
-                {role.label}
-              </div>
-              <div className={`text-xs ${selectedRole === role.value ? 'opacity-80' : 'text-slate-400'}`}>
-                {role.description}
-              </div>
-            </div>
-            {selectedRole === role.value && (
-              <div className="w-3 h-3 bg-white rounded-full shadow-lg"></div>
-            )}
-          </button>
-        ))}
-      </div>
-
-      {/* General AI Assistant (Logged-in only) */}
-      {isLoggedIn && (
-        <div className="space-y-2 pt-4 border-t-2 border-slate-700">
-          <div className="text-xs text-slate-500 uppercase tracking-wide font-semibold mb-2">
-            🤖 General Assistant
+      {roles.map((role) => (
+        <button
+          key={role.value}
+          onClick={() => onRoleChange(role.value)}
+          className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 border-2 ${
+            selectedRole === role.value
+              ? `${role.color} shadow-lg transform scale-105`
+              : 'border-slate-600 bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 hover:border-slate-500'
+          }`}
+        >
+          <div className={`p-2 rounded-lg ${selectedRole === role.value ? 'bg-white/20' : 'bg-slate-700'}`}>
+            {role.icon}
           </div>
-          <button
-            onClick={() => onRoleChange(generalRole.value)}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 border-2 ${
-              selectedRole === generalRole.value
-                ? `${generalRole.color} shadow-lg transform scale-105`
-                : 'border-slate-600 bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 hover:border-slate-500'
-            }`}
-          >
-            <div className={`p-2 rounded-lg ${selectedRole === generalRole.value ? 'bg-white/20' : 'bg-slate-700'}`}>
-              {generalRole.icon}
+          <div className="text-left flex-1">
+            <div className={`font-bold text-sm ${selectedRole === role.value ? '' : 'text-white'}`}>
+              {role.label}
             </div>
-            <div className="text-left flex-1">
-              <div className={`font-bold text-sm ${selectedRole === generalRole.value ? '' : 'text-white'}`}>
-                {generalRole.label}
-              </div>
-              <div className={`text-xs ${selectedRole === generalRole.value ? 'opacity-80' : 'text-slate-400'}`}>
-                {generalRole.description}
-              </div>
+            <div className={`text-xs ${selectedRole === role.value ? 'opacity-80' : 'text-slate-400'}`}>
+              {role.description}
             </div>
-            {selectedRole === generalRole.value && (
-              <div className="w-3 h-3 bg-white rounded-full shadow-lg"></div>
-            )}
-          </button>
-        </div>
-      )}
+          </div>
+          {selectedRole === role.value && (
+            <div className="w-3 h-3 bg-white rounded-full shadow-lg"></div>
+          )}
+        </button>
+      ))}
     </div>
   );
 };

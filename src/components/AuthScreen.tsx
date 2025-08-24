@@ -59,8 +59,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onComplete }) => {
             </div>
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">Cement Plant Expert AI</h1>
-          <h1 className="text-3xl font-bold text-white mb-2">CemtrAS AI</h1>
-          <p className="text-slate-300">AI-Driven Engineering for Cement Excellence</p>
+          <p className="text-slate-300">Secure access to your technical assistant</p>
         </div>
 
         {/* Auth Form Card */}

@@ -7,19 +7,8 @@ export interface Message {
 
 export type UserRole = 'Operations' | 'Project Management' | 'Sales & Marketing' | 'Procurement' | 'Erection & Commissioning' | 'Engineering & Design';
 
-export type GeneralRole = 'General AI Assistant';
-
-export type AllRoles = UserRole | GeneralRole;
-
 export interface ChatState {
   messages: Message[];
   isLoading: boolean;
-  selectedRole: AllRoles;
-}
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  chatHistory: Message[];
+  selectedRole: UserRole;
 }

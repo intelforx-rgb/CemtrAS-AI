@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import type { AllRoles } from '../types';
+import type { UserRole } from '../types';
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyD-VuzjoltDtX8Kw_inxDOpZ_xohYi7MFk';
 
@@ -9,8 +9,8 @@ if (!API_KEY) {
 
 const genAI = new GoogleGenerativeAI(API_KEY);
 
-const getSystemInstruction = (role: AllRoles): string => {
-  const baseInstruction = `You are CemtrAS AI, an advanced AI-powered cement plant engineering, operations, and optimization expert.
+const getSystemInstruction = (role: UserRole): string => {
+  const baseInstruction = `You are Vipul Sharma, a Cement Plant Expert AI Assistant and Technical Consultant.
 
 CRITICAL: Always respond in this structured consultant format:
 
@@ -34,15 +34,6 @@ Always use bullet points, numbered steps, or structured lists where helpful.
 Include specific technical parameters, temperatures, pressures, or measurements when relevant.
 `;
 
-  // General AI Assistant mode (free-form responses)
-  if (role === 'General AI Assistant') {
-    return `You are CemtrAS AI, a helpful and knowledgeable AI assistant.
-
-Provide clear, professional, and well-structured responses to any questions or requests.
-Be conversational yet informative, and organize your responses logically.
-Use bullet points, numbered lists, or structured formatting when it improves clarity.
-Always aim to be helpful, accurate, and comprehensive in your responses.`;
-  }
   const roleSpecificInstructions = {
     'Operations': `
 CEMENT PLANT OPERATIONS & MAINTENANCE EXPERT
@@ -102,7 +93,7 @@ Focus on:
   return baseInstruction + roleSpecificInstructions[role];
 };
 
-export const generateResponse = async (prompt: string, role: AllRoles): Promise<string> => {
+export const generateResponse = async (prompt: string, role: UserRole): Promise<string> => {
   try {
     const model = genAI.getGenerativeModel({ 
       model: 'gemini-1.5-flash',
