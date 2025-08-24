@@ -1,4 +1,3 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import type { AllRoles } from '../types';
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyD-VuzjoltDtX8Kw_inxDOpZ_xohYi7MFk';
@@ -7,7 +6,16 @@ if (!API_KEY) {
   throw new Error('GEMINI_API_KEY is not configured. Please set VITE_GEMINI_API_KEY in your environment variables.');
 }
 
-const genAI = new GoogleGenerativeAI(API_KEY);
+// Lazy load the GoogleGenerativeAI to reduce initial bundle size
+let genAI: any = null;
+
+const initializeGenAI = async () => {
+  if (!genAI) {
+    const { GoogleGenerativeAI } = await import('@google/generative-ai');
+    genAI = new GoogleGenerativeAI(API_KEY);
+  }
+  return genAI;
+};
 
 const getSystemInstruction = (role: AllRoles): string => {
   if (role === 'General AI Assistant') {
@@ -103,7 +111,8 @@ Focus on:
 
 export const generateResponse = async (prompt: string, role: AllRoles): Promise<string> => {
   try {
-    const model = genAI.getGenerativeModel({ 
+    const genAIInstance = await initializeGenAI();
+    const model = genAIInstance.getGenerativeModel({ 
       model: 'gemini-1.5-flash',
       systemInstruction: getSystemInstruction(role),
       generationConfig: {

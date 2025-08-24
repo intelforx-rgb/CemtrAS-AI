@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import { User, Bot, AlertTriangle, CheckCircle, Info, Target, BarChart3, Lightbulb, Shield } from 'lucide-react';
 import type { Message } from '../types';
 
@@ -6,10 +6,10 @@ interface ChatMessageProps {
   message: Message;
 }
 
-export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
+export const ChatMessage: React.FC<ChatMessageProps> = memo(({ message }) => {
   const isUser = message.role === 'user';
   
-  const renderStructuredContent = (content: string) => {
+  const renderStructuredContent = useMemo(() => (content: string) => {
     // Split content by sections
     const sections = content.split(/(?=Section \d+:|Problem Understanding|Analysis|Actionable Recommendations|Compliance Notes|Cost & Efficiency)/g);
     
@@ -94,7 +94,11 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         </div>
       );
     });
-  };
+  }, []);
+
+  const structuredContent = useMemo(() => {
+    return renderStructuredContent(message.content);
+  }, [message.content, renderStructuredContent]);
   
   const formatBulletPoints = (text: string) => {
     return text.split('\n').map((line, lineIndex) => {
@@ -132,7 +136,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
               <div className="font-semibold">{message.content}</div>
             ) : (
               <div className="space-y-2">
-                {renderStructuredContent(message.content)}
+                {structuredContent}
               </div>
             )}
           </div>
@@ -143,4 +147,4 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
       </div>
     </div>
   );
-};
+});

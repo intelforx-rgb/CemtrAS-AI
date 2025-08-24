@@ -4,8 +4,26 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Performance optimizations -->
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="color-scheme" content="dark light" />
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/src/main.tsx" as="script" crossorigin />
+    <link rel="preload" href="/src/index.css" as="style" />
+    
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="//generativelanguage.googleapis.com" />
+    
+    <!-- SEO and performance meta tags -->
     <title>CemtrAS AI | AI-Driven Engineering for Cement Excellence</title>
-    <meta name="description" content="CemtrAS AI - Professional AI-powered cement plant operations, safety & efficiency expert. AI-Driven Engineering for Cement Excellence.">
+    <meta name="description" content="CemtrAS AI - Professional AI-powered cement plant operations, safety & efficiency expert. AI-Driven Engineering for Cement Excellence." />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Performance hints -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="format-detection" content="telephone=no" />
   </head>
   <body>
     <div id="root"></div>
