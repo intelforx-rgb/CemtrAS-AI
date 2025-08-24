@@ -1,14 +1,25 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Factory, Settings, User, MessageSquare, Zap, LogIn, UserPlus, ArrowRight, Menu, X } from 'lucide-react';
+import React, { useState, useRef, useEffect, Suspense, lazy } from 'react';
+// Import only specific icons to reduce bundle size
+import { 
+  Factory, 
+  Settings, 
+  User, 
+  MessageSquare, 
+  Zap, 
+  Menu, 
+  X 
+} from 'lucide-react';
 import { ChatMessage } from './components/ChatMessage';
 import { ChatInput } from './components/ChatInput';
-import { RoleSelector } from './components/RoleSelector';
 import { LoadingMessage } from './components/LoadingMessage';
 import { ErrorMessage } from './components/ErrorMessage';
-import { LoginScreen } from './components/LoginScreen';
-import { AuthScreen } from './components/AuthScreen';
 import { generateResponse } from './utils/gemini';
 import type { Message, AllRoles, ChatState, User as UserType } from './types';
+
+// Lazy load components that are not immediately needed
+const RoleSelector = lazy(() => import('./components/RoleSelector'));
+const LoginScreen = lazy(() => import('./components/LoginScreen'));
+const AuthScreen = lazy(() => import('./components/AuthScreen'));
 
 function App() {
   const [showLogin, setShowLogin] = useState(true);
@@ -108,11 +119,19 @@ function App() {
   const clearError = () => setError(null);
 
   if (showLogin) {
-    return <LoginScreen onLogin={handleLogin} onGuestAccess={handleGuestAccess} />;
+    return (
+      <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+        <LoginScreen onLogin={handleLogin} onGuestAccess={handleGuestAccess} />
+      </Suspense>
+    );
   }
 
   if (showAuth) {
-    return <AuthScreen onComplete={handleAuthComplete} />;
+    return (
+      <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+        <AuthScreen onComplete={handleAuthComplete} />
+      </Suspense>
+    );
   }
 
   return (
@@ -182,11 +201,13 @@ function App() {
             {/* Role Selector */}
             <div className="space-y-3">
               <h4 className="text-slate-300 font-semibold text-sm uppercase tracking-wide">Select Assistant Mode:</h4>
-              <RoleSelector 
-                selectedRole={chatState.selectedRole}
-                onRoleChange={handleRoleChange}
-                isLoggedIn={!!currentUser}
-              />
+              <Suspense fallback={<div>Loading Role Selector...</div>}>
+                <RoleSelector 
+                  selectedRole={chatState.selectedRole}
+                  onRoleChange={handleRoleChange}
+                  isLoggedIn={!!currentUser}
+                />
+              </Suspense>
             </div>
           </div>
         )}
