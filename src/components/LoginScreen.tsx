@@ -25,8 +25,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onGuestAccess
               <Factory className="text-white" size={32} />
             </div>
             <div>
-              <h1 className="text-white font-bold text-lg">CEMENT PLANT</h1>
-              <p className="text-yellow-400 text-sm font-semibold">EXPERT AI</p>
+              <h1 className="text-white font-bold text-lg">CemtrAS AI</h1>
+              <p className="text-yellow-400 text-sm font-semibold">AI-Driven Engineering</p>
             </div>
           </div>
         </div>
@@ -50,13 +50,13 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onGuestAccess
         {/* Welcome Message */}
         <div className="text-center max-w-lg">
           <h3 className="text-white font-bold text-3xl mb-4 leading-tight">
-            👷 Welcome to Cement Plant Expert AI
+            🏭 Welcome to CemtrAS AI
           </h3>
           <p className="text-slate-300 text-lg mb-2 font-semibold">
-            Your Partner in Optimizing Operations, Safety & Efficiency
+            AI-Driven Engineering for Cement Excellence
           </p>
           <p className="text-slate-400 text-base leading-relaxed">
-            I am <span className="text-yellow-400 font-bold">Vipul</span>, your technical assistant, here to provide expert guidance for cement plant operations, maintenance, and performance improvement.
+            Advanced AI-powered cement plant engineering, operations, and optimization expert. Your partner in cement industry excellence.
           </p>
         </div>
       </div>
@@ -147,8 +147,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onGuestAccess
         {/* Footer */}
         <div className="text-center mt-12">
           <p className="text-slate-500 text-sm">
-            Powered by <span className="text-blue-600 font-bold">Advanced AI Technology</span> | 
-            © 2024 Cement Plant Expert
+            Powered by <span className="text-blue-600 font-bold">CemtrAS AI Technology</span> | 
+            © 2024 CemtrAS AI
           </p>
         </div>
       </div>

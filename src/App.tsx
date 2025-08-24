@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Factory, Settings, User, MessageSquare, Zap, LogIn, UserPlus, ArrowRight } from 'lucide-react';
+import { Factory, Settings, User, MessageSquare, Zap, LogIn, UserPlus, ArrowRight, Menu, X } from 'lucide-react';
 import { ChatMessage } from './components/ChatMessage';
 import { ChatInput } from './components/ChatInput';
 import { RoleSelector } from './components/RoleSelector';
@@ -8,12 +8,13 @@ import { ErrorMessage } from './components/ErrorMessage';
 import { LoginScreen } from './components/LoginScreen';
 import { AuthScreen } from './components/AuthScreen';
 import { generateResponse } from './utils/gemini';
-import type { Message, UserRole, ChatState } from './types';
+import type { Message, AllRoles, ChatState, User as UserType } from './types';
 
 function App() {
   const [showLogin, setShowLogin] = useState(true);
   const [showAuth, setShowAuth] = useState(false);
   const [isGuest, setIsGuest] = useState(false);
+  const [currentUser, setCurrentUser] = useState<UserType | null>(null);
   const [chatState, setChatState] = useState<ChatState>({
     messages: [],
     isLoading: false,
@@ -21,6 +22,7 @@ function App() {
   });
   const [error, setError] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -38,6 +40,24 @@ function App() {
     }
   }, []);
 
+  // Load saved chat history for logged-in users
+  useEffect(() => {
+    if (currentUser) {
+      const savedHistory = localStorage.getItem(`cemtras_chat_${currentUser.id}`);
+      if (savedHistory) {
+        const parsedHistory = JSON.parse(savedHistory);
+        setChatState(prev => ({ ...prev, messages: parsedHistory }));
+      }
+    }
+  }, [currentUser]);
+
+  // Save chat history for logged-in users
+  useEffect(() => {
+    if (currentUser && chatState.messages.length > 0) {
+      localStorage.setItem(`cemtras_chat_${currentUser.id}`, JSON.stringify(chatState.messages));
+    }
+  }, [chatState.messages, currentUser]);
+
   const handleLogin = () => {
     setShowLogin(false);
     setShowAuth(true);
@@ -51,6 +71,14 @@ function App() {
   };
 
   const handleAuthComplete = () => {
+    // Simulate user login
+    const mockUser: UserType = {
+      id: 'user_' + Date.now(),
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      chatHistory: []
+    };
+    setCurrentUser(mockUser);
     setShowAuth(false);
     setIsGuest(false);
   };
@@ -92,11 +120,14 @@ function App() {
     }
   };
 
-  const handleRoleChange = (role: UserRole) => {
+  const handleRoleChange = (role: AllRoles) => {
     setChatState(prev => ({ ...prev, selectedRole: role }));
+    setMobileMenuOpen(false);
   };
 
   const clearError = () => setError(null);
+
+  const isLoggedIn = !!currentUser;
 
   if (showLogin) {
     return <LoginScreen onLogin={handleLogin} onGuestAccess={handleGuestAccess} />;
@@ -108,8 +139,8 @@ function App() {
 
   return (
     <div className="h-screen bg-gradient-to-br from-gray-400 via-gray-500 to-gray-600 flex overflow-hidden">
-      {/* Sidebar */}
-      <div className={`${sidebarOpen ? 'w-80' : 'w-16'} transition-all duration-300 bg-gradient-to-b from-slate-800 to-slate-900 border-r-4 border-yellow-500 flex flex-col shadow-2xl`}>
+      {/* Desktop Sidebar */}
+      <div className={`hidden lg:flex ${sidebarOpen ? 'w-80' : 'w-16'} transition-all duration-300 bg-gradient-to-b from-slate-800 to-slate-900 border-r-4 border-yellow-500 flex-col shadow-2xl`}>
         {/* Sidebar Header */}
         <div className="p-6 border-b-2 border-slate-700">
           <div className="flex items-center gap-3 mb-4">
@@ -125,46 +156,46 @@ function App() {
                   <Factory className="text-white" size={28} />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-white tracking-wide">CEMENT PLANT</h1>
-                  <p className="text-yellow-400 text-sm font-semibold">EXPERT AI</p>
+                  <h1 className="text-xl font-bold text-white tracking-wide">CemtrAS AI</h1>
+                  <p className="text-yellow-400 text-xs font-semibold">AI-Driven Engineering</p>
                 </div>
               </div>
             )}
           </div>
         </div>
 
-        {/* Profile Section */}
+        {/* Founder Section */}
         {sidebarOpen && (
           <div className="p-6 border-b-2 border-slate-700">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 rounded-full overflow-hidden border-4 border-yellow-500 shadow-lg">
+            <div className="text-center">
+              <div className="text-xs text-slate-400 uppercase tracking-wide font-bold mb-3">FOUNDER</div>
+              <div className="w-16 h-16 rounded-full overflow-hidden border-4 border-yellow-500 shadow-lg mx-auto mb-3">
                 <img 
                   src="/untitled (10).jpeg" 
                   alt="Vipul Sharma"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div>
-                <h3 className="text-white font-bold text-lg">Vipul Sharma</h3>
-                <p className="text-yellow-400 text-sm font-semibold">Technical Assistant</p>
-                <p className="text-slate-400 text-xs">Plant Operations Expert</p>
-              </div>
+              <h3 className="text-white font-bold text-lg">Vipul Sharma</h3>
+              <p className="text-slate-400 text-xs">Cement Industry Expert</p>
             </div>
-            
-            {/* Role Selector */}
-            <div className="space-y-3">
-              <h4 className="text-slate-300 font-semibold text-sm uppercase tracking-wide">Select Expertise Area:</h4>
-              <RoleSelector 
-                selectedRole={chatState.selectedRole}
-                onRoleChange={handleRoleChange}
-              />
-            </div>
+          </div>
+        )}
+
+        {/* Role Selector */}
+        {sidebarOpen && (
+          <div className="p-6 flex-1 overflow-y-auto">
+            <RoleSelector 
+              selectedRole={chatState.selectedRole}
+              onRoleChange={handleRoleChange}
+              isLoggedIn={isLoggedIn}
+            />
           </div>
         )}
 
         {/* Stats */}
         {sidebarOpen && (
-          <div className="p-6 flex-1">
+          <div className="p-6 border-t-2 border-slate-700">
             <div className="space-y-4">
               <div className="bg-slate-800/80 rounded-lg p-4 border-l-4 border-blue-500">
                 <div className="flex items-center gap-3 mb-2">
@@ -187,7 +218,7 @@ function App() {
               {isGuest && (
                 <div className="bg-yellow-500/20 rounded-lg p-4 border border-yellow-500">
                   <p className="text-yellow-300 text-xs font-semibold mb-2">GUEST MODE</p>
-                  <p className="text-slate-300 text-xs">Login to save chats & access detailed reports</p>
+                  <p className="text-slate-300 text-xs">Login to save chats & access general AI</p>
                 </div>
               )}
             </div>
@@ -199,14 +230,14 @@ function App() {
           {sidebarOpen ? (
             <div className="text-center">
               <p className="text-slate-400 text-xs">
-                Powered by <span className="text-yellow-400 font-bold">AI Technology</span>
+                Powered by <span className="text-yellow-400 font-bold">CemtrAS AI</span>
               </p>
-              <p className="text-slate-500 text-xs mt-1">© 2024 Cement Plant Expert</p>
+              <p className="text-slate-500 text-xs mt-1">© 2024 CemtrAS AI</p>
             </div>
           ) : (
             <div className="flex justify-center">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center">
-                <span className="text-white text-xs font-bold">VS</span>
+                <span className="text-white text-xs font-bold">CA</span>
               </div>
             </div>
           )}
@@ -216,27 +247,47 @@ function App() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <div className="bg-white/95 backdrop-blur-sm border-b-4 border-blue-600 p-6 shadow-lg">
+        <div className="bg-white/95 backdrop-blur-sm border-b-4 border-blue-600 p-4 lg:p-6 shadow-lg">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="lg:hidden p-2 hover:bg-slate-100 rounded-lg transition-colors"
+              >
+                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+              
               <div className="p-3 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl shadow-lg">
                 <Factory className="text-white" size={24} />
               </div>
               <div>
-                <h2 className="text-slate-800 font-bold text-xl">👷 Cement Plant Expert AI</h2>
-                <p className="text-slate-600 text-sm font-semibold">
-                  Expertise: <span className="text-blue-600 font-bold">{chatState.selectedRole}</span>
-                  {isGuest && <span className="ml-2 text-yellow-600">(Guest Mode)</span>}
+                <h2 className="text-slate-800 font-bold text-lg lg:text-xl">🏭 CemtrAS AI</h2>
+                <p className="text-slate-600 text-xs lg:text-sm font-semibold">
+                  Mode: <span className="text-blue-600 font-bold">{chatState.selectedRole}</span>
+                  {isGuest && <span className="ml-2 text-yellow-600">(Guest)</span>}
+                  {isLoggedIn && <span className="ml-2 text-green-600">({currentUser?.name})</span>}
                 </p>
               </div>
             </div>
             
             <div className="flex items-center gap-3">
               <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-lg"></div>
-              <span className="text-slate-700 text-sm font-semibold">ONLINE</span>
+              <span className="text-slate-700 text-sm font-semibold hidden sm:inline">ONLINE</span>
             </div>
           </div>
         </div>
+
+        {/* Mobile Role Selector */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden bg-gradient-to-b from-slate-800 to-slate-900 border-b-4 border-yellow-500 p-4 max-h-96 overflow-y-auto">
+            <RoleSelector 
+              selectedRole={chatState.selectedRole}
+              onRoleChange={handleRoleChange}
+              isLoggedIn={isLoggedIn}
+            />
+          </div>
+        )}
 
         {/* Error Display */}
         {error && (
@@ -251,24 +302,24 @@ function App() {
         {/* Chat Container */}
         <div className="flex-1 flex flex-col min-h-0 bg-gradient-to-b from-gray-100 to-white">
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          <div className="flex-1 overflow-y-auto p-4 lg:p-6 space-y-6">
             {chatState.messages.length === 0 && !error ? (
-              <div className="text-center py-12">
-                <div className="p-8 bg-gradient-to-br from-blue-600/10 to-blue-800/10 rounded-3xl w-32 h-32 mx-auto mb-8 flex items-center justify-center border-4 border-blue-200 shadow-xl">
-                  <Factory className="text-blue-600 w-16 h-16" />
+              <div className="text-center py-8 lg:py-12">
+                <div className="p-6 lg:p-8 bg-gradient-to-br from-blue-600/10 to-blue-800/10 rounded-3xl w-24 h-24 lg:w-32 lg:h-32 mx-auto mb-6 lg:mb-8 flex items-center justify-center border-4 border-blue-200 shadow-xl">
+                  <Factory className="text-blue-600 w-12 h-12 lg:w-16 lg:h-16" />
                 </div>
-                <h3 className="text-3xl font-bold text-slate-800 mb-4">👷 Hello, I'm Vipul – your Cement Plant Expert AI</h3>
-                <p className="text-slate-600 mb-8 max-w-2xl mx-auto text-lg leading-relaxed">
-                  Your Partner in Optimizing Operations, Safety & Efficiency.<br/>
+                <h3 className="text-2xl lg:text-3xl font-bold text-slate-800 mb-4">🏭 Hello, I'm CemtrAS AI</h3>
+                <p className="text-slate-600 mb-6 lg:mb-8 max-w-2xl mx-auto text-base lg:text-lg leading-relaxed px-4">
+                  AI-Driven Engineering for Cement Excellence.<br/>
                   Choose your area of expertise to get tailored guidance for cement plant operations, maintenance, and performance improvement.
                 </p>
-                <div className="bg-white rounded-2xl p-8 max-w-4xl mx-auto border-4 border-slate-200 shadow-xl">
-                  <h4 className="text-xl font-bold text-slate-800 mb-6">🔧 Available Expertise Areas:</h4>
-                  <div className="grid grid-cols-2 gap-6 text-sm">
+                <div className="bg-white rounded-2xl p-6 lg:p-8 max-w-4xl mx-auto border-4 border-slate-200 shadow-xl">
+                  <h4 className="text-lg lg:text-xl font-bold text-slate-800 mb-4 lg:mb-6">🔧 Available Expertise Areas:</h4>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 text-sm">
                     <div className="text-left space-y-3">
                       <div className="flex items-center gap-3">
                         <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                        <p className="text-slate-700 font-semibold"> Plant Operations & Maintenance</p>
+                        <p className="text-slate-700 font-semibold">Plant Operations & Maintenance</p>
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
@@ -294,6 +345,14 @@ function App() {
                       </div>
                     </div>
                   </div>
+                  {isLoggedIn && (
+                    <div className="mt-6 pt-6 border-t-2 border-slate-200">
+                      <div className="flex items-center gap-3 justify-center">
+                        <div className="w-3 h-3 bg-indigo-500 rounded-full"></div>
+                        <p className="text-slate-700 font-semibold">General AI Assistant (ChatGPT-like)</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
@@ -308,11 +367,11 @@ function App() {
           </div>
 
           {/* Input */}
-          <div className="border-t-4 border-blue-600 bg-white/95 backdrop-blur-sm p-6 shadow-lg">
+          <div className="border-t-4 border-blue-600 bg-white/95 backdrop-blur-sm p-4 lg:p-6 shadow-lg">
             <ChatInput 
               onSend={handleSendMessage}
               isLoading={chatState.isLoading || !!error}
-              placeholder={`Ask about cement plant operations (${chatState.selectedRole} expertise)...`}
+              placeholder={`Ask about cement plant operations (${chatState.selectedRole} mode)...`}
             />
           </div>
         </div>
