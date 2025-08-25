@@ -6,7 +6,7 @@ import { RoleSelector } from './components/RoleSelector';
 import { LoadingMessage } from './components/LoadingMessage';
 import { ErrorMessage } from './components/ErrorMessage';
 import LoginScreen from './components/LoginScreen';
-import AuthScreen from './components/AuthScreen';
+import { AuthScreen } from './components/AuthScreen';
 import { generateResponse } from './utils/gemini';
 import type { Message, AllRoles, ChatState, User as UserType } from './types';
 
