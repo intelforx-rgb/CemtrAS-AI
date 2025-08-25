@@ -5,7 +5,7 @@ interface Role {
   name: string;
 }
 
-interface SidebarProps {
+interface RoleSelectorProps {
   selectedRole: string;
   onSelectRole: (roleId: string) => void;
   userName?: string;
@@ -20,7 +20,7 @@ const roles: Role[] = [
   { id: "engineering", name: "Engineering & Design" },
 ];
 
-const Sidebar: React.FC<SidebarProps> = ({ selectedRole, onSelectRole, userName }) => {
+export const RoleSelector: React.FC<RoleSelectorProps> = ({ selectedRole, onSelectRole, userName }) => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   return (
@@ -90,5 +90,3 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedRole, onSelectRole, userName 
     </>
   );
 };
-
-export default Sidebar;
